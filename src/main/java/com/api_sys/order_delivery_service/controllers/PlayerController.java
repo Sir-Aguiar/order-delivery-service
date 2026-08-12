@@ -1,6 +1,7 @@
 package com.api_sys.order_delivery_service.controllers;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +32,11 @@ public class PlayerController {
     Player created = playerService.create(request);
     URI location = URI.create("/players/" + created.getNickname());
     return ResponseEntity.created(location).body(created);
+  }
+
+  @GetMapping
+  public ResponseEntity<List<Player>> findAll() {
+    return ResponseEntity.ok(playerService.findAll());
   }
 
   @GetMapping("/{nickname}")

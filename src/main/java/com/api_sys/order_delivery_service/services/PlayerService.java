@@ -1,5 +1,7 @@
 package com.api_sys.order_delivery_service.services;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -30,6 +32,10 @@ public class PlayerService {
     player.setPlayerId(request.getPlayerId());
 
     return playerRepository.save(player);
+  }
+
+  public List<Player> findAll() {
+    return playerRepository.findAll();
   }
 
   public Player findByNickname(String nickname) {
