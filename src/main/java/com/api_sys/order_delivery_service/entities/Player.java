@@ -19,6 +19,7 @@ public class Player {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
+  @Column(name = "player_id", nullable = false, unique = true)
   private String playerId;
 
   @Column(name = "nickname", nullable = false, unique = true)
