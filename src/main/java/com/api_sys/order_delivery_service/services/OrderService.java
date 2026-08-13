@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.api_sys.order_delivery_service.dtos.CreateOrderRequest;
+import com.api_sys.order_delivery_service.entities.Item;
 import com.api_sys.order_delivery_service.entities.Order;
 import com.api_sys.order_delivery_service.entities.OrderStatus;
 import com.api_sys.order_delivery_service.entities.Player;
+import com.api_sys.order_delivery_service.repositories.ItemRepository;
 import com.api_sys.order_delivery_service.repositories.OrderRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,14 +21,19 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
 
   private final OrderRepository orderRepository;
+  private final ItemRepository itemRepository;
   private final PlayerService playerService;
 
   public Order create(CreateOrderRequest request) {
     Player player = playerService.findByPlayerId(request.getPlayerId());
+    Item item = itemRepository.findByIdWithEnchantments(request.getItemId())
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "Item não encontrado com itemId '%s'".formatted(request.getItemId())));
 
     Order order = new Order();
     order.setPlayer(player);
-    order.setItemId(request.getItemId());
+    order.setItem(item);
     order.setStatus(OrderStatus.PENDING);
 
     return orderRepository.save(order);
@@ -34,7 +41,7 @@ public class OrderService {
 
   public List<Order> findPendingByPlayerId(String playerId) {
     playerService.findByPlayerId(playerId);
-    return orderRepository.findByPlayer_PlayerIdAndStatus(playerId, OrderStatus.PENDING);
+    return orderRepository.findByPlayer_PlayerIdAndStatusWithItem(playerId, OrderStatus.PENDING);
   }
 
   public boolean hasPendingByPlayerId(String playerId) {
@@ -42,7 +49,7 @@ public class OrderService {
   }
 
   public Order confirmDelivery(String orderId) {
-    Order order = orderRepository.findById(orderId)
+    Order order = orderRepository.findByIdWithItem(orderId)
         .orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             "Pedido não encontrado com orderId '%s'".formatted(orderId)));

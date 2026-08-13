@@ -1,8 +1,9 @@
 package com.api_sys.order_delivery_service.entities;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,33 +18,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "item_enchantment")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+public class ItemEnchantment {
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private String orderId;
+  private UUID itemEnchantmentId;
 
   @ManyToOne
-  @JoinColumn(name = "player_id")
+  @JoinColumn(name = "item_id")
   @JsonIgnore
-  private Player player;
-
-  @ManyToOne
-  @JoinColumn(name = "item_id", nullable = false)
   private Item item;
 
+  private Integer level;
+
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private OrderStatus status;
-
-  public String getPlayerId() {
-    return player != null ? player.getPlayerId() : null;
-  }
-
-  public String getItemId() {
-    return item != null ? item.getItemId() : null;
-  }
+  private Enchantment enchantment;
 }
