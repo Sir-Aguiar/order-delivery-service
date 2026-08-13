@@ -40,6 +40,11 @@ public class OrderController {
     return ResponseEntity.ok(orderService.findPendingByPlayerId(playerId));
   }
 
+  @GetMapping("/pending/{playerId}/exists")
+  public ResponseEntity<Boolean> hasPendingByPlayerId(@PathVariable String playerId) {
+    return ResponseEntity.ok(orderService.hasPendingByPlayerId(playerId));
+  }
+
   @PatchMapping("/{orderId}/confirm")
   public ResponseEntity<Order> confirmDelivery(@PathVariable String orderId) {
     return ResponseEntity.ok(orderService.confirmDelivery(orderId));

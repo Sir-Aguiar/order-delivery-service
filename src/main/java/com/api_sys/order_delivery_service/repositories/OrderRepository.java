@@ -10,4 +10,6 @@ import com.api_sys.order_delivery_service.entities.OrderStatus;
 public interface OrderRepository extends JpaRepository<Order, String> {
 
   List<Order> findByPlayer_PlayerIdAndStatus(String playerId, OrderStatus status);
+
+  boolean existsByPlayer_PlayerIdAndStatus(String playerId, OrderStatus status);
 }

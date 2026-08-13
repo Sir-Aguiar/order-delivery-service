@@ -37,9 +37,15 @@ public class OrderService {
     return orderRepository.findByPlayer_PlayerIdAndStatus(playerId, OrderStatus.PENDING);
   }
 
+  public boolean hasPendingByPlayerId(String playerId) {
+    return orderRepository.existsByPlayer_PlayerIdAndStatus(playerId, OrderStatus.PENDING);
+  }
+
   public Order confirmDelivery(String orderId) {
     Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado"));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "Pedido não encontrado com orderId '%s'".formatted(orderId)));
 
     if (order.getStatus() != OrderStatus.PENDING) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Somente pedidos PENDING podem ser confirmados");

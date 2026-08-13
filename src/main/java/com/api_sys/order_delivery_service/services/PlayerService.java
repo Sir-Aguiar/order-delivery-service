@@ -40,11 +40,15 @@ public class PlayerService {
 
   public Player findByNickname(String nickname) {
     return playerRepository.findByNickname(nickname)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Jogador não encontrado"));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "Jogador não encontrado com nickname '%s'".formatted(nickname)));
   }
 
   public Player findByPlayerId(String playerId) {
     return playerRepository.findById(playerId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Jogador não encontrado"));
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "Jogador não encontrado com playerId '%s'".formatted(playerId)));
   }
 }
